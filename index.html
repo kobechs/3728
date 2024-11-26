@@ -1,0 +1,277 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: content: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .proverb-container {
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 600px;
+            background-color: #fff8e7;
+            border: 1px solid #d4b998;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .proverb-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #8b5a2b;
+        }
+
+        .proverb-meaning,
+        .proverb-japanese,
+        .proverb-example,
+        .proverb-example-japanese {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-top: 1px solid #d4b998;
+        }
+
+        .proverb-meaning {
+            font-style: italic;
+            color: #6f4e37;
+        }
+
+        .proverb-japanese {
+            font-weight: bold;
+            color: #5a3d2b;
+        }
+
+        .proverb-example,
+        .proverb-example-japanese {
+            color: #5e3a1a;
+        }
+
+        #proverbScreen button {
+            margin-top: 20px;
+        }
+    </style>
+    <script>
+        let no = 0;
+
+        const proverbList = [
+            {
+                english: "Actions speak louder than words.",
+                meaning: "What people do is more important than what they say.",
+                japanese: "行動は言葉よりも雄弁である。",
+                example: "Instead of just promising to help, he actually did something. Actions speak louder than words.",
+                exampleJapanese: "彼は助けると約束し、実際に行動してみせた。行動は言葉よりも雄弁である。"
+            },
+            {
+                english: "A picture is worth a thousand words.",
+                meaning: "An image can convey complex ideas better than words.",
+                japanese: "一枚の絵は千の言葉に値する。",
+                example: "The map was so clear that no explanation was needed. A picture is worth a thousand words.",
+                exampleJapanese: "地図はとてもわかりやすく、説明は必要なかった。一枚の絵は千の言葉に値する。"
+            },
+            {
+                english: "When in Rome, do as the Romans do.",
+                meaning: "Follow the customs of the people around you when in a foreign place.",
+                japanese: "郷に入っては郷に従え。",
+                example: "I felt awkward at first, but when in Rome, do as the Romans do, so I joined them in their customs.",
+                exampleJapanese: "最初は気まずく感じたが、郷に入っては郷に従えということで、彼らの習慣に従った。"
+            },
+            {
+                english: "The early bird catches the worm.",
+                meaning: "Those who act quickly are more likely to succeed.",
+                japanese: "早起きは三文の得。",
+                example: "She always wakes up early to study, believing that the early bird catches the worm.",
+                exampleJapanese: "彼女はいつも早起きして勉強する。早起きは三文の得だと信じているからだ。"
+            },
+            {
+                english: "Better late than never.",
+                meaning: "It is better to do something late than not to do it at all.",
+                japanese: "遅くともやらないよりはまし。",
+                example: "He finally finished his degree at 40 years old. Better late than never!",
+                exampleJapanese: "彼は40歳でようやく学位を取得した。遅くともやらないよりはましだ！"
+            },
+            {
+                english: "A watched pot never boils.",
+                meaning: "When you're waiting for something, it feels like it's taking longer.",
+                japanese: "待つ身は長い。",
+                example: "It seemed like the water was taking forever to boil. I guess a watched pot never boils.",
+                exampleJapanese: "水が沸くのに永遠に時間がかかっているように感じた。待つ身は長いということだ。"
+            },
+            {
+                english: "Two heads are better than one.",
+                meaning: "Two people working together can solve a problem better than one person alone.",
+                japanese: "二人の知恵は一人に勝る。",
+                example: "We couldn't solve the puzzle until we worked together. Two heads are better than one.",
+                exampleJapanese: "私たちは一緒に作業するまでパズルを解くことができなかった。二人の知恵は一人に勝る。"
+            },
+            {
+                english: "Don’t judge a book by its cover.",
+                meaning: "Don’t make assumptions about something based on its appearance.",
+                japanese: "人を見かけで判断してはいけない。",
+                example: "He seemed unfriendly at first, but he's really nice. Don’t judge a book by its cover.",
+                exampleJapanese: "彼は最初は無愛想に見えたが、実際にはとても親切だった。人を見かけで判断してはいけない。"
+            },
+            {
+                english: "Honesty is the best policy.",
+                meaning: "Telling the truth is always the right choice.",
+                japanese: "正直は最良の策である。",
+                example: "She could have lied to avoid trouble, but she told the truth. Honesty is the best policy.",
+                exampleJapanese: "彼女は嘘をついてトラブルを避けることもできたが、正直に話した。正直は最良の策だ。"
+            },
+            {
+                english: "The pen is mightier than the sword.",
+                meaning: "Words and ideas are more powerful than physical force.",
+                japanese: "ペンは剣よりも強し。",
+                example: "The writer's article caused a revolution. The pen is mightier than the sword.",
+                exampleJapanese: "その作家の記事が革命を引き起こした。ペンは剣よりも強し。"
+            },
+            {
+                english: "Rome wasn't built in a day.",
+                meaning: "Great things take time to achieve.",
+                japanese: "ローマは一日にして成らず。",
+                example: "It took years to build their business. Rome wasn't built in a day.",
+                exampleJapanese: "彼らのビジネスは数年かかって成長した。ローマは一日にして成らず。"
+            },
+            {
+                english: "No pain, no gain.",
+                meaning: "You have to work hard for success.",
+                japanese: "苦労なくして利益なし。",
+                example: "He trained every day for the marathon. No pain, no gain.",
+                exampleJapanese: "彼はマラソンのために毎日トレーニングをした。苦労なくして利益なし。"
+            },
+            {
+                english: "Birds of a feather flock together.",
+                meaning: "People with similar interests tend to group together.",
+                japanese: "類は友を呼ぶ。",
+                example: "All the artists hung out together. Birds of a feather flock together.",
+                exampleJapanese: "すべてのアーティストたちは一緒に過ごした。類は友を呼ぶ。"
+            },
+            {
+                english: "Curiosity killed the cat.",
+                meaning: "Being too curious can lead to trouble.",
+                japanese: "好奇心は猫をも殺す。",
+                example: "He got into trouble because he couldn't resist investigating. Curiosity killed the cat.",
+                exampleJapanese: "彼は好奇心が抑えられずに調査を続け、トラブルに巻き込まれた。好奇心は猫をも殺す。"
+            },
+            {
+                english: "The grass is always greener on the other side.",
+                meaning: "People always think others have it better.",
+                japanese: "隣の芝生は青い。",
+                example: "She thought her friend's job was easier, but it wasn’t. The grass is always greener on the other side.",
+                exampleJapanese: "彼女は友人の仕事が簡単だと思っていたが、そうではなかった。隣の芝生は青い。"
+            },
+            {
+                english: "You can’t have your cake and eat it too.",
+                meaning: "You can't enjoy two mutually exclusive things at the same time.",
+                japanese: "二兎を追う者は一兎をも得ず。",
+                example: "He wanted to save money but also spend freely. You can’t have your cake and eat it too.",
+                exampleJapanese: "彼はお金を貯めたい一方で自由に使いたがっていた。二兎を追う者は一兎をも得ず。"
+            }
+        ];
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function startProverbs() {
+            no = 0;
+            document.getElementById("startScreen").style.display = "none";  
+            document.getElementById("instructionScreen").style.display = "flex"; 
+        }
+
+        function proceedToProverbs() {
+            shuffle(proverbList);  
+            document.getElementById("instructionScreen").style.display = "none";  
+            document.getElementById("proverbScreen").style.display = "block"; 
+            showProverb();
+        }
+
+        function showProverb() {
+            if (no < proverbList.length) {
+                const proverb = proverbList[no];
+                document.getElementById("proverb").innerHTML = proverb.english;
+                document.getElementById("meaning").innerHTML = proverb.meaning;
+                document.getElementById("japanese").innerHTML = proverb.japanese;
+                document.getElementById("example").innerHTML = "Example: " + proverb.example;
+                document.getElementById("exampleJapanese").innerHTML = "例: " + proverb.exampleJapanese;
+                document.getElementById("backButton").style.display = no === 0 ? "none" : "inline"; 
+                document.getElementById("nextButton").style.display = no === proverbList.length - 1 ? "none" : "inline"; 
+                document.getElementById("restartButton").style.display = no === proverbList.length - 1 ? "inline" : "none"; 
+            }
+        }
+
+        function nextProverb() {
+            if (no < proverbList.length - 1) {
+                no++;
+                showProverb();
+            }
+        }
+
+        function backProverb() {
+            if (no > 0) {
+                no--;
+                showProverb();
+            }
+        }
+
+        function restartProverbs() {
+            no = 0;
+            document.getElementById("proverbScreen").style.display = "none";
+            document.getElementById("startScreen").style.display = "block";
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "ArrowRight") {
+                nextProverb(); 
+            } else if (event.key === "ArrowLeft") {
+                backProverb(); 
+            } else if (event.key === "Backspace") {
+                restartProverbs(); 
+            } else if (event.key === " ") {  
+                if (document.getElementById("instructionScreen").style.display === "flex") {
+                    proceedToProverbs(); 
+                }
+            }
+        });
+        
+    </script>
+</head>
+<body>
+    <div id="startScreen" style="text-align: center;">
+        <h1>英語ことわざ辞典</h1>
+        <button onclick="startProverbs()">勉強する！</button>
+        <button onclick="location.href='indey.html'">問題へ！</button>
+    </div>
+
+    <div id="instructionScreen">
+        <h1>操作方法</h1>
+        <p>右矢印で次へ</p>
+        <p>左矢印で戻る</p>
+        <p>Backspaceで初めのページに戻る</p>
+        <p>Spaceで開始</p>
+        <button onclick="proceedToProverbs()">開始</button>
+    </div>
+
+    <div id="proverbScreen">
+        <h1>英語ことわざ辞典</h1>
+        <div class="proverb-container">
+            <div class="proverb-title" id="proverb"></div>
+            <div class="proverb-meaning" id="meaning"></div>
+            <div class="proverb-japanese" id="japanese"></div>
+            <div class="proverb-example" id="example"></div>
+            <div class="proverb-example-japanese" id="exampleJapanese"></div>
+        </div>
+        <button id="backButton" onclick="backProverb()" style="display: none;">戻る</button>
+        <button id="nextButton" onclick="nextProverb()">次へ</button>
+        <button id="restartButton" onclick="restartProverbs()" style="display: none;">最初から</button>
+    </div>
+    <footer>
+        <p>提供：ChatGPT</p>
+    </footer>
+</body>
+</html>
